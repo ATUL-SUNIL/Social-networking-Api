@@ -1,0 +1,432 @@
+
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Social Networking API",
+    "description": "API documentation for the Social Networking platform"
+  },
+  "host": "localhost:3200",
+  "basePath": "/api",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/users/signup": {
+      "post": {
+        "summary": "Sign up a new user",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User signed up successfully"
+          }
+        }
+      }
+    },
+    "/users/signin": {
+      "post": {
+        "summary": "Sign in a user",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User signed in successfully",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Incorrect credentials"
+          }
+        }
+      }
+    },
+    "/posts/all": {
+      "get": {
+        "summary": "Get all posts",
+        "description": "Retrieve all posts with optional pagination",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "integer",
+            "description": "Page number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "integer",
+            "description": "Number of posts per page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Post"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{postId}": {
+      "get": {
+        "summary": "Get post by ID",
+        "description": "Retrieve a single post by its ID",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        }
+      }
+    },
+    "/posts": {
+      "get": {
+        "summary": "Get user posts",
+        "description": "Retrieve posts for the authenticated user",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Post"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new post",
+        "description": "Create a new post with an image",
+        "parameters": [
+          {
+            "name": "caption",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageUrl",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "Image file to upload"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Post created successfully"
+          }
+        }
+      }
+    },
+    "/posts/{id}": {
+      "delete": {
+        "summary": "Delete a post",
+        "description": "Delete a post by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post deleted successfully"
+          },
+          "400": {
+            "description": "Error deleting post"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a post",
+        "description": "Update a post by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to update"
+          },
+          {
+            "name": "caption",
+            "in": "body",
+            "type": "string",
+            "description": "New caption for the post"
+          },
+          {
+            "name": "imageUrl",
+            "in": "body",
+            "type": "string",
+            "description": "New image URL for the post"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Post updated successfully"
+          },
+          "400": {
+            "description": "Error updating post"
+          }
+        }
+      }
+    },
+    "/comments/{postId}": {
+      "get": {
+        "summary": "Get comments by post ID",
+        "description": "Retrieve all comments for a specific post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to retrieve comments for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Comment"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new comment",
+        "description": "Create a new comment for a specific post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to comment on"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Comment created successfully"
+          }
+        }
+      }
+    },
+    "/comments/{commentId}": {
+      "put": {
+        "summary": "Update a comment",
+        "description": "Update a comment by its ID",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the comment to update"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "New content for the comment"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment updated successfully"
+          },
+          "400": {
+            "description": "Error updating comment"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a comment",
+        "description": "Delete a comment by its ID",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the comment to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment deleted successfully"
+          },
+          "400": {
+            "description": "Error deleting comment"
+          }
+        }
+      }
+    },
+    "/likes/{postId}": {
+      "get": {
+        "summary": "Get likes by post ID",
+        "description": "Retrieve all likes for a specific post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to retrieve likes for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Like"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Toggle like",
+        "description": "Toggle like/unlike for a specific post",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID of the post to like/unlike"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Like toggled successfully"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Post": {
+      "type": "object",
+      "properties": {
+        "caption": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "Like": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "integer"
+        },
+        "postId": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
